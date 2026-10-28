@@ -33,6 +33,38 @@ body {
   padding: 24px;
 }
 
+/* 头像 + 名字的纵向布局 */
+.profile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(20px, 3.5vw, 32px);
+  animation: rise 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+/* 头像下方的名字：渐变字 + 呼吸辉光 */
+.name {
+  margin: 0;
+  padding-left: 0.14em; /* 抵消末字后的字距，让文字视觉居中 */
+  font-size: clamp(30px, 6.2vw, 46px);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.14em;
+  background-image: linear-gradient(
+    100deg,
+    #67e8f9 0%,
+    #a5b4fc 38%,
+    #f9a8d4 68%,
+    #67e8f9 100%
+  );
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  animation: name-glow 7s ease-in-out infinite;
+}
+
 .avatar {
   position: relative;
   width: var(--size);
@@ -196,11 +228,36 @@ body {
   }
 }
 
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes name-glow {
+  0%,
+  100% {
+    background-position: 0% 50%;
+    filter: drop-shadow(0 8px 24px rgba(99, 102, 241, 0.35));
+  }
+  50% {
+    background-position: 100% 50%;
+    filter: drop-shadow(0 10px 34px rgba(244, 114, 182, 0.45));
+  }
+}
+
 /* 尊重系统「减少动态效果」设置 */
 @media (prefers-reduced-motion: reduce) {
   .avatar,
   .avatar__ring,
-  .avatar__glow {
+  .avatar__glow,
+  .profile,
+  .name {
     animation: none;
   }
 
