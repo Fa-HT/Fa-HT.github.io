@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <title>Fa_HT</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <main class="stage">
+    <figure class="avatar">
+      <span class="avatar__glow" aria-hidden="true"></span>
+      <span class="avatar__ring" aria-hidden="true"></span>
+
+      <div class="avatar__frame">
+        <!-- 换成你自己的头像：把图片命名为 FFF.png 放在本文件同级目录 -->
+        <img class="avatar__img" src="FFF.png" alt="Fa_HT 的头像" width="260" height="260" decoding="async">
+        <span class="avatar__fallback" aria-hidden="true">Fa_HT</span>
+      </div>
+    </figure>
+  </main>
+
+  <script>
+    // 头像文件还没放进来时，自动显示渐变底 + 名字，避免出现破图图标
+    (function () {
+      var avatar = document.querySelector('.avatar');
+      var img = document.querySelector('.avatar__img');
+
+      function showFallback() {
+        avatar.classList.add('is-missing');
+      }
+
+      img.addEventListener('error', showFallback);
+      if (img.complete && img.naturalWidth === 0) showFallback();
+    })();
+  </script>
+
+</body>
+</html>

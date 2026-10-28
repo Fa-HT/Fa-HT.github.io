@@ -1,0 +1,210 @@
+:root {
+  --bg: #05070d;
+  --size: clamp(180px, 44vw, 260px);
+  --ring: 6px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background:
+    radial-gradient(60% 55% at 50% 30%, rgba(56, 189, 248, 0.16), transparent 70%),
+    radial-gradient(50% 50% at 82% 82%, rgba(168, 85, 247, 0.14), transparent 70%),
+    radial-gradient(45% 45% at 15% 85%, rgba(236, 72, 153, 0.10), transparent 70%),
+    var(--bg);
+  font-family: system-ui, -apple-system, "Segoe UI", "Microsoft YaHei", sans-serif;
+}
+
+/* 页面中央的承载容器 */
+.stage {
+  display: grid;
+  place-items: center;
+  padding: 24px;
+}
+
+.avatar {
+  position: relative;
+  width: var(--size);
+  height: var(--size);
+  margin: 0;
+  display: grid;
+  place-items: center;
+  isolation: isolate;
+  animation: float 7s ease-in-out infinite;
+}
+
+/* 背后的呼吸光晕 */
+.avatar__glow {
+  position: absolute;
+  inset: -22%;
+  z-index: -1;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.55), transparent 65%);
+  filter: blur(26px);
+  animation: breathe 5s ease-in-out infinite;
+}
+
+/* 旋转的渐变光环（用遮罩挖空中间，只留一圈） */
+.avatar__ring {
+  position: absolute;
+  inset: calc(var(--ring) * -1);
+  border-radius: 50%;
+  background: conic-gradient(
+    from 0deg,
+    #22d3ee,
+    #818cf8 25%,
+    #f472b6 50%,
+    #818cf8 75%,
+    #22d3ee
+  );
+  -webkit-mask: radial-gradient(
+    farthest-side,
+    transparent calc(100% - var(--ring)),
+    #000 calc(100% - var(--ring) + 0.5px)
+  );
+  mask: radial-gradient(
+    farthest-side,
+    transparent calc(100% - var(--ring)),
+    #000 calc(100% - var(--ring) + 0.5px)
+  );
+  animation: spin 8s linear infinite;
+  transition: filter 0.4s ease;
+}
+
+/* 头像本体 */
+.avatar__frame {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border-radius: 50%;
+  background: linear-gradient(145deg, #0f172a, #1e293b);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.09),
+    inset 0 0 40px rgba(0, 0, 0, 0.65),
+    0 26px 70px rgba(2, 6, 23, 0.85);
+  transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.5s ease;
+}
+
+.avatar__img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* 头像没加载出来时的占位：渐变底 + 名字 */
+.avatar__fallback {
+  position: absolute;
+  inset: 0;
+  display: none;
+  place-items: center;
+  background: linear-gradient(135deg, #0ea5e9, #6366f1 48%, #db2777);
+  color: #fff;
+  font-size: clamp(28px, 7vw, 46px);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-shadow: 0 2px 18px rgba(2, 6, 23, 0.45);
+}
+
+.avatar.is-missing .avatar__img {
+  visibility: hidden;
+}
+
+.avatar.is-missing .avatar__fallback {
+  display: grid;
+}
+
+/* 悬停：稍微放大、光环变亮、扫过一道高光 */
+.avatar:hover .avatar__frame {
+  transform: scale(1.035);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.18),
+    inset 0 0 40px rgba(0, 0, 0, 0.55),
+    0 30px 80px rgba(56, 189, 248, 0.28);
+}
+
+.avatar:hover .avatar__img {
+  transform: scale(1.06);
+}
+
+.avatar:hover .avatar__ring {
+  filter: brightness(1.35) saturate(1.2);
+}
+
+.avatar__frame::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    115deg,
+    transparent 32%,
+    rgba(255, 255, 255, 0.28) 46%,
+    transparent 58%
+  );
+  transform: translateX(-130%);
+  pointer-events: none;
+}
+
+.avatar:hover .avatar__frame::after {
+  animation: sheen 0.9s ease forwards;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(1turn);
+  }
+}
+
+@keyframes breathe {
+  0%,
+  100% {
+    opacity: 0.75;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.06);
+  }
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes sheen {
+  to {
+    transform: translateX(130%);
+  }
+}
+
+/* 尊重系统「减少动态效果」设置 */
+@media (prefers-reduced-motion: reduce) {
+  .avatar,
+  .avatar__ring,
+  .avatar__glow {
+    animation: none;
+  }
+
+  .avatar:hover .avatar__frame::after {
+    animation: none;
+  }
+}
