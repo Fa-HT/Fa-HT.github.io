@@ -5,9 +5,23 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="dark">
   <title>Fa_HT</title>
-  <link rel="stylesheet" href="style.css?v=3">
+  <link rel="stylesheet" href="style.css?v=7">
 </head>
 <body>
+
+  <!-- 背景视频：静音自动循环，铺满整屏 -->
+  <video class="bg-video" autoplay muted loop playsinline preload="auto" aria-hidden="true">
+    <source src="bg.mp4" type="video/mp4">
+  </video>
+  <div class="bg-shade" aria-hidden="true"></div>
+
+  <!-- 两条竖线之间的模糊带：将来在这里放可交互 UI -->
+  <div class="ui-band" id="uiBand">
+    <div class="ui-band__blur" aria-hidden="true"></div>
+    <div class="ui-band__inner" id="uiBandInner">
+      <!-- 可交互内容放这里 -->
+    </div>
+  </div>
 
   <main class="stage">
     <section class="profile">
@@ -41,6 +55,61 @@
       img.addEventListener('error', showFallback);
       if (img.complete && img.naturalWidth === 0) showFallback();
     })();
+
+    // 背景视频：自动播放失败时重试；系统开启“减少动态效果”时暂停
+    (function () {
+      var v = document.querySelector('.bg-video');
+      if (!v) return;
+
+      v.muted = true;
+
+      if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        v.removeAttribute('autoplay');
+        v.pause();
+        return;
+      }
+
+      function play() {
+        var p = v.play();
+        if (p && p.catch) p.catch(function () {});
+      }
+
+      play();
+      v.addEventListener('canplay', play, { once: true });
+    })();
+
+    // 两条竖线位置调节
+    //   setBand(20, 80)          -> 左边线 20%、右边线 80%（数字=视口宽度百分比）
+    //   setBand('320px', '960px')-> 也可直接给带单位的 CSS 长度
+    //   setBand(20)              -> 只改左边线
+    //   getBand()                -> 读取当前两条线的位置
+    //   resetBand()              -> 恢复 style.css 里的默认值
+    window.setBand = function (left, right) {
+      var root = document.documentElement;
+
+      function toCss(v) {
+        return typeof v === 'number' ? Math.max(0, Math.min(100, v)) + '%' : String(v);
+      }
+
+      if (left !== undefined && left !== null) root.style.setProperty('--band-left', toCss(left));
+      if (right !== undefined && right !== null) root.style.setProperty('--band-right', toCss(right));
+      return window.getBand();
+    };
+
+    window.getBand = function () {
+      var cs = getComputedStyle(document.documentElement);
+      return {
+        left: cs.getPropertyValue('--band-left').trim(),
+        right: cs.getPropertyValue('--band-right').trim()
+      };
+    };
+
+    window.resetBand = function () {
+      var root = document.documentElement;
+      root.style.removeProperty('--band-left');
+      root.style.removeProperty('--band-right');
+      return window.getBand();
+    };
   </script>
 
 </body>
