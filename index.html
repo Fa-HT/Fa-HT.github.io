@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="dark">
   <title>Fa_HT</title>
-  <link rel="stylesheet" href="style.css?v=7">
+  <link rel="stylesheet" href="style.css?v=8">
 </head>
 <body>
 
@@ -18,6 +18,7 @@
   <!-- 两条竖线之间的模糊带：将来在这里放可交互 UI -->
   <div class="ui-band" id="uiBand">
     <div class="ui-band__blur" aria-hidden="true"></div>
+    <div class="ui-band__frame" aria-hidden="true"></div>
     <div class="ui-band__inner" id="uiBandInner">
       <!-- 可交互内容放这里 -->
     </div>
@@ -78,12 +79,13 @@
       v.addEventListener('canplay', play, { once: true });
     })();
 
-    // 两条竖线位置调节
-    //   setBand(20, 80)          -> 左边线 20%、右边线 80%（数字=视口宽度百分比）
-    //   setBand('320px', '960px')-> 也可直接给带单位的 CSS 长度
-    //   setBand(20)              -> 只改左边线
-    //   getBand()                -> 读取当前两条线的位置
-    //   resetBand()              -> 恢复 style.css 里的默认值
+    // 模糊区块的位置 / 大小调节
+    //   setBand(20, 80)                        -> 左边线 20%、右边线 80%（数字=视口宽度百分比）
+    //   setBand('320px', '960px')              -> 也可直接给带单位的 CSS 长度
+    //   setBandBox({ top: 5, bottom: 5 })      -> 纵向位置（数字=视口高度百分比）
+    //   setBandSize(40, 90, 30, 5)             -> 宽 40%、高 90%、左 30%、上 5%
+    //   getBandBox()                           -> 读取 { left, right, top, bottom }
+    //   resetBand()                            -> 恢复 style.css 里的默认值
     window.setBand = function (left, right) {
       var root = document.documentElement;
 
@@ -93,14 +95,43 @@
 
       if (left !== undefined && left !== null) root.style.setProperty('--band-left', toCss(left));
       if (right !== undefined && right !== null) root.style.setProperty('--band-right', toCss(right));
-      return window.getBand();
+      return window.getBandBox();
     };
 
-    window.getBand = function () {
+    window.setBandBox = function (box) {
+      var root = document.documentElement;
+
+      function toCss(v) {
+        return typeof v === 'number' ? Math.max(0, Math.min(100, v)) + '%' : String(v);
+      }
+
+      if (!box) return window.getBandBox();
+      if (box.left != null) root.style.setProperty('--band-left', toCss(box.left));
+      if (box.right != null) root.style.setProperty('--band-right', toCss(box.right));
+      if (box.top != null) root.style.setProperty('--band-top', toCss(box.top));
+      if (box.bottom != null) root.style.setProperty('--band-bottom', toCss(box.bottom));
+      return window.getBandBox();
+    };
+
+    // 用「宽 + 高 + 左 + 上」来定：数字都是百分比
+    window.setBandSize = function (width, height, left, top) {
+      left = left == null ? 0 : left;
+      top = top == null ? 0 : top;
+      return window.setBandBox({
+        left: left,
+        right: left + width,
+        top: top,
+        bottom: top + height
+      });
+    };
+
+    window.getBandBox = function () {
       var cs = getComputedStyle(document.documentElement);
       return {
         left: cs.getPropertyValue('--band-left').trim(),
-        right: cs.getPropertyValue('--band-right').trim()
+        right: cs.getPropertyValue('--band-right').trim(),
+        top: cs.getPropertyValue('--band-top').trim(),
+        bottom: cs.getPropertyValue('--band-bottom').trim()
       };
     };
 
@@ -108,7 +139,9 @@
       var root = document.documentElement;
       root.style.removeProperty('--band-left');
       root.style.removeProperty('--band-right');
-      return window.getBand();
+      root.style.removeProperty('--band-top');
+      root.style.removeProperty('--band-bottom');
+      return window.getBandBox();
     };
   </script>
 
