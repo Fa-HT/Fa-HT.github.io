@@ -179,18 +179,25 @@ body {
   animation: rise 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) both;
 }
 
-/* 书签：横贯头像和名字，右端做成分叉 */
+/* 书签：横贯整块模糊区域，右端做成分叉 */
 .bookmark {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: calc(100% + 48px);
-  height: 104px;
-  transform: translate(-50%, -50%);
-  z-index: 0;
+  position: fixed;
+  left: var(--band-left);
+  right: calc(100% - var(--band-right));
+  top: calc(8vh + var(--size) * 0.5);
+  height: clamp(86px, 11vmin, 118px);
+  transform: translateY(-50%);
+  z-index: -1;
   pointer-events: none;
-  clip-path: polygon(0 0, 100% 0, 94% 50%, 100% 100%, 0 100%);
+  clip-path: polygon(0 0, 100% 0, 91% 50%, 100% 100%, 0 100%);
   background:
+    linear-gradient(
+      180deg,
+      rgba(255, 242, 214, 0.2) 0%,
+      rgba(255, 242, 214, 0.04) 16%,
+      rgba(0, 0, 0, 0.1) 58%,
+      rgba(0, 0, 0, 0.36) 100%
+    ),
     repeating-linear-gradient(
       135deg,
       rgba(255, 255, 255, 0.05) 0 1px,
@@ -203,31 +210,50 @@ body {
     ),
     linear-gradient(
       180deg,
-      rgba(82, 34, 45, 0.93) 0%,
-      rgba(50, 18, 30, 0.95) 55%,
+      rgba(88, 37, 49, 0.94) 0%,
+      rgba(54, 20, 33, 0.96) 55%,
       rgba(26, 8, 16, 0.97) 100%
     );
   box-shadow:
+    0 26px 52px rgba(0, 0, 0, 0.5),
+    0 8px 20px rgba(0, 0, 0, 0.45),
+    inset 0 1px 0 rgba(255, 236, 204, 0.32),
+    inset 0 -22px 36px rgba(0, 0, 0, 0.42),
     inset 0 0 0 1px rgba(240, 214, 160, 0.55),
     inset 0 0 0 6px rgba(20, 8, 12, 0.35),
     inset 0 0 0 7px rgba(240, 214, 160, 0.16),
-    inset 0 0 34px rgba(0, 0, 0, 0.55),
-    0 0 34px rgba(0, 0, 0, 0.35),
-    0 0 26px rgba(240, 200, 130, 0.14);
+    0 0 28px rgba(240, 200, 130, 0.16);
+}
+
+/* 折痕：让书签看起来有厚度 */
+.bookmark::before {
+  content: "";
+  position: absolute;
+  top: 9%;
+  bottom: 9%;
+  right: 8.5%;
+  width: 2px;
+  background: linear-gradient(
+    180deg,
+    transparent,
+    rgba(0, 0, 0, 0.45),
+    transparent
+  );
+  box-shadow: 1px 0 0 rgba(255, 236, 204, 0.1);
 }
 
 /* 书签右端的金色细分隔线 */
 .bookmark::after {
   content: "";
   position: absolute;
-  top: 16%;
-  bottom: 16%;
-  right: 12.5%;
+  top: 18%;
+  bottom: 18%;
+  right: 12%;
   width: 1px;
   background: linear-gradient(
     180deg,
     transparent,
-    rgba(240, 214, 160, 0.65),
+    rgba(240, 214, 160, 0.6),
     transparent
   );
 }
@@ -250,9 +276,11 @@ body {
 .name {
   position: relative;
   z-index: 2;
-  margin: 0;
+  margin: 0 12px 0 0;
   padding-left: 0.12em;
-  font-size: clamp(20px, 3.2vw, 32px);
+  font-family: "Palatino Linotype", "Book Antiqua", Palatino, Georgia,
+    "Times New Roman", serif;
+  font-size: clamp(22px, 3.4vw, 34px);
   font-weight: 700;
   line-height: 1;
   letter-spacing: 0.12em;
