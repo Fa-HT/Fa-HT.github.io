@@ -6,8 +6,8 @@
   --band-left: 30%;
   --band-right: 70%;
   /* 模糊区块的上下位置（都是“距离顶部”的边位置，和 left/right 一致） */
-  --band-top: 5%;
-  --band-bottom: 95%;
+  --band-top: 2%;
+  --band-bottom: 98%;
 }
 
 * {
