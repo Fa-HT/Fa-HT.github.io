@@ -1,6 +1,6 @@
 :root {
   --bg: #05070d;
-  --size: clamp(150px, 36vw, 224px);
+  --size: clamp(96px, 13vw, 150px);
   --ring: 6px;
   /* 两条竖线的位置：左边线 --band-left，右边线 --band-right */
   --band-left: 30%;
@@ -169,27 +169,27 @@ body {
   pointer-events: auto;
 }
 
-/* 头像 + 书签 + 纹章 + 名字的纵向布局 */
+/* 头像 + 书签 + 纹章 + 名字的横向布局（左头像 → 右名字） */
 .profile {
   position: relative;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
-  gap: clamp(8px, 1.2vw, 14px);
+  gap: clamp(8px, 1.4vw, 16px);
   animation: rise 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) both;
 }
 
-/* 书签：把头像和名字串起来 */
+/* 书签：横贯头像和名字，右端做成分叉 */
 .bookmark {
   position: absolute;
   left: 50%;
-  top: 56px;
-  bottom: -76px;
-  width: 150px;
-  transform: translateX(-50%);
+  top: 50%;
+  width: calc(100% + 48px);
+  height: 104px;
+  transform: translate(-50%, -50%);
   z-index: 0;
   pointer-events: none;
-  clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 87%, 0 100%);
+  clip-path: polygon(0 0, 100% 0, 94% 50%, 100% 100%, 0 100%);
   background:
     repeating-linear-gradient(
       135deg,
@@ -216,18 +216,18 @@ body {
     0 0 26px rgba(240, 200, 130, 0.14);
 }
 
-/* 书签上下的金色细饰线 */
+/* 书签右端的金色细分隔线 */
 .bookmark::after {
   content: "";
   position: absolute;
-  left: 16%;
-  right: 16%;
-  bottom: 12%;
-  height: 1px;
+  top: 16%;
+  bottom: 16%;
+  right: 12.5%;
+  width: 1px;
   background: linear-gradient(
-    90deg,
+    180deg,
     transparent,
-    rgba(240, 214, 160, 0.7),
+    rgba(240, 214, 160, 0.65),
     transparent
   );
 }
@@ -236,25 +236,8 @@ body {
 .crest {
   position: relative;
   z-index: 2;
-  width: clamp(40px, 5vw, 52px);
-  margin-top: 2px;
+  width: clamp(26px, 3vw, 34px);
   filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.7));
-}
-
-.crest::after {
-  content: "";
-  position: absolute;
-  left: 50%;
-  top: calc(100% + 8px);
-  width: 96px;
-  height: 1px;
-  transform: translateX(-50%);
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(240, 214, 160, 0.75),
-    transparent
-  );
 }
 
 .crest svg {
@@ -269,7 +252,7 @@ body {
   z-index: 2;
   margin: 0;
   padding-left: 0.12em;
-  font-size: clamp(24px, 4.6vw, 36px);
+  font-size: clamp(20px, 3.2vw, 32px);
   font-weight: 700;
   line-height: 1;
   letter-spacing: 0.12em;
