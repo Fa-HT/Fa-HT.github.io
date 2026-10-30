@@ -1,6 +1,6 @@
 :root {
   --bg: #05070d;
-  --size: clamp(180px, 44vw, 260px);
+  --size: clamp(150px, 36vw, 224px);
   --ring: 6px;
   /* 两条竖线的位置：左边线 --band-left，右边线 --band-right */
   --band-left: 30%;
@@ -76,12 +76,20 @@ body {
   pointer-events: none;
   border-radius: 28px;
   overflow: hidden;
-  background: linear-gradient(
-    180deg,
-    rgba(4, 7, 16, 0.10) 0%,
-    rgba(4, 7, 16, 0.24) 55%,
-    rgba(4, 7, 16, 0.36) 100%
-  );
+  background:
+    linear-gradient(
+      90deg,
+      rgba(26, 10, 16, 0.42) 0%,
+      rgba(26, 10, 16, 0) 14%,
+      rgba(26, 10, 16, 0) 86%,
+      rgba(26, 10, 16, 0.36) 100%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(250, 236, 210, 0.06) 0%,
+      rgba(60, 26, 34, 0.22) 55%,
+      rgba(24, 9, 15, 0.38) 100%
+    );
   box-shadow:
     0 0 40px rgba(2, 4, 12, 0.35),
     inset 0 0 80px rgba(2, 4, 12, 0.25);
@@ -124,14 +132,14 @@ body {
   inset: 0;
   pointer-events: none;
   background-image:
-    linear-gradient(90deg, rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0)),
-    linear-gradient(270deg, rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0)),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0)),
-    linear-gradient(270deg, rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0)),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0)),
-    linear-gradient(0deg, rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0)),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0)),
-    linear-gradient(0deg, rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0));
+    linear-gradient(90deg, rgba(240, 214, 160, 0.9), rgba(255, 255, 255, 0)),
+    linear-gradient(270deg, rgba(240, 214, 160, 0.9), rgba(255, 255, 255, 0)),
+    linear-gradient(90deg, rgba(240, 214, 160, 0.9), rgba(255, 255, 255, 0)),
+    linear-gradient(270deg, rgba(240, 214, 160, 0.9), rgba(255, 255, 255, 0)),
+    linear-gradient(180deg, rgba(240, 214, 160, 0.9), rgba(255, 255, 255, 0)),
+    linear-gradient(0deg, rgba(240, 214, 160, 0.9), rgba(255, 255, 255, 0)),
+    linear-gradient(180deg, rgba(240, 214, 160, 0.9), rgba(255, 255, 255, 0)),
+    linear-gradient(0deg, rgba(240, 214, 160, 0.9), rgba(255, 255, 255, 0));
   background-size:
     34% 1px,
     34% 1px,
@@ -161,37 +169,123 @@ body {
   pointer-events: auto;
 }
 
-/* 头像 + 名字的纵向布局 */
+/* 头像 + 书签 + 纹章 + 名字的纵向布局 */
 .profile {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: clamp(20px, 3.5vw, 32px);
+  gap: clamp(8px, 1.2vw, 14px);
   animation: rise 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) both;
 }
 
-/* 头像下方的名字：渐变字 + 呼吸辉光 */
+/* 书签：把头像和名字串起来 */
+.bookmark {
+  position: absolute;
+  left: 50%;
+  top: 56px;
+  bottom: -76px;
+  width: 150px;
+  transform: translateX(-50%);
+  z-index: 0;
+  pointer-events: none;
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 87%, 0 100%);
+  background:
+    repeating-linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.05) 0 1px,
+      transparent 1px 9px
+    ),
+    repeating-linear-gradient(
+      45deg,
+      rgba(255, 255, 255, 0.05) 0 1px,
+      transparent 1px 9px
+    ),
+    linear-gradient(
+      180deg,
+      rgba(82, 34, 45, 0.93) 0%,
+      rgba(50, 18, 30, 0.95) 55%,
+      rgba(26, 8, 16, 0.97) 100%
+    );
+  box-shadow:
+    inset 0 0 0 1px rgba(240, 214, 160, 0.55),
+    inset 0 0 0 6px rgba(20, 8, 12, 0.35),
+    inset 0 0 0 7px rgba(240, 214, 160, 0.16),
+    inset 0 0 34px rgba(0, 0, 0, 0.55),
+    0 0 34px rgba(0, 0, 0, 0.35),
+    0 0 26px rgba(240, 200, 130, 0.14);
+}
+
+/* 书签上下的金色细饰线 */
+.bookmark::after {
+  content: "";
+  position: absolute;
+  left: 16%;
+  right: 16%;
+  bottom: 12%;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(240, 214, 160, 0.7),
+    transparent
+  );
+}
+
+/* 骑士纹章 */
+.crest {
+  position: relative;
+  z-index: 2;
+  width: clamp(40px, 5vw, 52px);
+  margin-top: 2px;
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.7));
+}
+
+.crest::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: calc(100% + 8px);
+  width: 96px;
+  height: 1px;
+  transform: translateX(-50%);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(240, 214, 160, 0.75),
+    transparent
+  );
+}
+
+.crest svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* 书签上的名字：暖金渐变 */
 .name {
+  position: relative;
+  z-index: 2;
   margin: 0;
-  padding-left: 0.14em; /* 抵消末字后的字距，让文字视觉居中 */
-  font-size: clamp(30px, 6.2vw, 46px);
+  padding-left: 0.12em;
+  font-size: clamp(24px, 4.6vw, 36px);
   font-weight: 700;
   line-height: 1;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.12em;
   text-align: center;
   background-image: linear-gradient(
-    100deg,
-    #67e8f9 0%,
-    #a5b4fc 38%,
-    #f9a8d4 68%,
-    #67e8f9 100%
+    180deg,
+    #fdf3d8 0%,
+    #e8c98a 48%,
+    #b98a44 100%
   );
-  background-size: 200% 100%;
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
   -webkit-text-fill-color: transparent;
-  animation: name-glow 7s ease-in-out infinite;
+  filter: drop-shadow(0 2px 7px rgba(8, 3, 6, 0.9))
+    drop-shadow(0 0 16px rgba(240, 200, 130, 0.25));
 }
 
 /* 极老浏览器不支持文字渐变时，退回纯色，避免整行看不见 */
@@ -205,6 +299,7 @@ body {
 
 .avatar {
   position: relative;
+  z-index: 2;
   width: var(--size);
   height: var(--size);
   margin: 0;
@@ -231,7 +326,7 @@ body {
   inset: -22%;
   z-index: -1;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(99, 102, 241, 0.55), transparent 65%);
+  background: radial-gradient(circle, rgba(240, 200, 130, 0.42), transparent 66%);
   filter: blur(26px);
   animation: breathe 5s ease-in-out infinite;
 }
@@ -243,11 +338,11 @@ body {
   border-radius: 50%;
   background: conic-gradient(
     from 0deg,
-    #22d3ee,
-    #818cf8 25%,
-    #f472b6 50%,
-    #818cf8 75%,
-    #22d3ee
+    #f6d98a,
+    #b8862f 25%,
+    #fbefd0 50%,
+    #b8862f 75%,
+    #f6d98a
   );
   -webkit-mask: radial-gradient(
     farthest-side,

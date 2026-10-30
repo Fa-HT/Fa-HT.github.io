@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="dark">
   <title>Fa_HT</title>
-  <link rel="stylesheet" href="style.css?v=8">
+  <link rel="stylesheet" href="style.css?v=9">
 </head>
 <body>
 
@@ -26,6 +26,8 @@
 
   <main class="stage">
     <section class="profile">
+      <div class="bookmark" aria-hidden="true"></div>
+
       <figure class="avatar">
         <div class="avatar__inner">
           <span class="avatar__glow" aria-hidden="true"></span>
@@ -38,6 +40,23 @@
           </div>
         </div>
       </figure>
+
+      <div class="crest" aria-hidden="true">
+        <svg viewBox="0 0 64 80" focusable="false">
+          <defs>
+            <linearGradient id="crestGold" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#fff6e0" />
+              <stop offset="50%" stop-color="#e8c98a" />
+              <stop offset="100%" stop-color="#b8862f" />
+            </linearGradient>
+          </defs>
+          <path d="M32 3 L58 11 V40 C58 57 46 70 32 76 C18 70 6 57 6 40 V11 Z"
+                fill="rgba(18,7,12,0.7)" stroke="url(#crestGold)" stroke-width="2.6" />
+          <path d="M32 16 V64" fill="none" stroke="#f2dcae" stroke-width="4" stroke-linecap="round" />
+          <path d="M16 30 H48" fill="none" stroke="#f2dcae" stroke-width="3.4" stroke-linecap="round" />
+          <path d="M24 46 H40" fill="none" stroke="#e8c98a" stroke-width="2" stroke-linecap="round" opacity="0.7" />
+        </svg>
+      </div>
 
       <h1 class="name">Fa-HT</h1>
     </section>
