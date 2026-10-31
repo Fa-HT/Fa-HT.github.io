@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="dark">
   <title>Fa_HT</title>
-  <link rel="stylesheet" href="style.css?v=12">
+  <link rel="stylesheet" href="style.css?v=13">
 </head>
 <body>
 
@@ -90,6 +90,75 @@
     <!-- 书签横幅：横贯整块模糊区域，把头像、纹章和名字分散串起来 -->
     <div class="bookmark" aria-hidden="true">
       <div class="bookmark__trim">
+        <!-- 左端：从书签左边缘向内展开的多边形层叠底托，把纹章包在里面 -->
+        <svg class="bookmark__wing" viewBox="0 0 300 100" preserveAspectRatio="none" focusable="false">
+          <defs>
+            <linearGradient id="wgBase" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0" stop-color="rgba(126, 74, 40, 0.24)" />
+              <stop offset="0.5" stop-color="rgba(120, 66, 38, 0.13)" />
+              <stop offset="1" stop-color="rgba(120, 66, 38, 0.03)" />
+            </linearGradient>
+            <linearGradient id="wgShade" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="rgba(255, 244, 222, 0.16)" />
+              <stop offset="0.3" stop-color="rgba(255, 244, 222, 0)" />
+              <stop offset="0.7" stop-color="rgba(0, 0, 0, 0.05)" />
+              <stop offset="1" stop-color="rgba(0, 0, 0, 0.3)" />
+            </linearGradient>
+            <linearGradient id="wgGold" x1="0" y1="1" x2="1" y2="0">
+              <stop offset="0" stop-color="rgba(240, 214, 160, 0.55)" />
+              <stop offset="0.45" stop-color="rgba(250, 230, 184, 0.95)" />
+              <stop offset="1" stop-color="rgba(240, 214, 160, 0.45)" />
+            </linearGradient>
+            <linearGradient id="wgBlue" x1="0" y1="0" x2="0.9" y2="1">
+              <stop offset="0" stop-color="#e6f6ff" />
+              <stop offset="0.3" stop-color="#9bd4f6" />
+              <stop offset="0.65" stop-color="#3d82c9" />
+              <stop offset="1" stop-color="#0e2b52" />
+            </linearGradient>
+            <radialGradient id="wgGlow">
+              <stop offset="0" stop-color="rgba(255, 224, 168, 0.16)" />
+              <stop offset="1" stop-color="rgba(255, 224, 168, 0)" />
+            </radialGradient>
+          </defs>
+
+          <path d="M0 7 H226 L300 50 L226 93 H0 Z" fill="url(#wgBase)" />
+          <path d="M0 7 H226 L300 50 L226 93 H0 Z" fill="url(#wgShade)" />
+          <polygon points="0,15 218,15 282,50 218,85 0,85" fill="rgba(150, 88, 46, 0.1)" stroke="rgba(240, 214, 160, 0.3)" stroke-width="0.9" />
+
+          <g stroke="rgba(240, 214, 160, 0.16)" stroke-width="0.8">
+            <path d="M0 93 L52 7" />
+            <path d="M44 93 L96 7" />
+            <path d="M104 93 L156 7" />
+            <path d="M128 93 L180 7" />
+            <path d="M188 93 L226 7" />
+            <path d="M210 93 L252 7" />
+          </g>
+          <polygon points="0,93 52,7 96,7 44,93" fill="rgba(255, 238, 205, 0.07)" />
+          <polygon points="104,93 156,7 180,7 128,93" fill="rgba(0, 0, 0, 0.1)" />
+
+          <path d="M226 7 L300 50 L226 93 Z" fill="rgba(255, 232, 186, 0.1)" />
+          <ellipse cx="250" cy="50" rx="72" ry="42" fill="url(#wgGlow)" />
+
+          <path d="M0 8.2 H225 L298.4 50 L225 91.8 H0" fill="none" stroke="url(#wgGold)" stroke-width="2" />
+          <path d="M0 12.5 H221 L290 50 L221 87.5 H0" fill="none" stroke="rgba(240, 214, 160, 0.34)" stroke-width="0.9" />
+          <path d="M0 10.6 H223 L294.6 50 L223 89.4 H0" fill="none" stroke="rgba(28, 8, 12, 0.55)" stroke-width="1.2" />
+
+          <path d="M226 7 V93" stroke="rgba(240, 214, 160, 0.38)" stroke-width="0.9" />
+          <path d="M230 16 L286 50 L230 84" fill="none" stroke="rgba(240, 214, 160, 0.3)" stroke-width="0.9" />
+
+          <path d="M0 90.6 H225 L296 50" fill="none" stroke="rgba(0, 0, 0, 0.4)" stroke-width="1.4" />
+
+          <g transform="translate(287 50)">
+            <polygon points="0,-7.2 5,-1 0,7.2 -5,-1" fill="none" stroke="rgba(245, 220, 170, 0.95)" stroke-width="1" />
+            <polygon points="0,-7.2 4,0 0,7.2 -4,0" fill="url(#wgBlue)" />
+            <polygon points="0,-7.2 0,0 -4,0" fill="rgba(255, 255, 255, 0.5)" />
+          </g>
+          <g transform="translate(226 50)">
+            <polygon points="0,-4 2.8,-0.6 0,4 -2.8,-0.6" fill="none" stroke="rgba(240, 214, 160, 0.75)" stroke-width="0.8" />
+            <polygon points="0,-4 2.2,0 0,4 -2.2,0" fill="url(#wgBlue)" opacity="0.95" />
+          </g>
+        </svg>
+
         <!-- 右段空位：由大到小的蓝宝石饰带 -->
         <svg class="bookmark__gems" viewBox="0 0 200 80" focusable="false">
           <defs>

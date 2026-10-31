@@ -289,6 +289,16 @@ body {
   pointer-events: none;
 }
 
+/* 左端：从书签左边缘向内展开的多边形层叠底托 */
+.bookmark__wing {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: clamp(200px, 31%, 430px);
+  height: 100%;
+  pointer-events: none;
+}
+
 /* 右段空位：由大到小的蓝宝石饰带 */
 .bookmark__gems {
   position: absolute;
