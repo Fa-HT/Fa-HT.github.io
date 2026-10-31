@@ -1,4 +1,6 @@
 ﻿:root {
+  /* 烧蚀边界（由脚本逐帧写入）：130% = 完全没烧，-30% = 全部烧掉 */
+  --burn: 130%;
   --bg: #05070d;
 
   /* ============================================================
@@ -194,7 +196,8 @@ body {
   right: calc(100% - var(--band-right));
   top: calc(8vh + var(--avatar-size) * 0.5);
   translate: 0 -50%;
-  height: clamp(86px, 11vmin, 118px);
+  /* 比书签高一些，头像和它的光环不会在烧蚀遮罩里被裁掉 */
+  height: max(clamp(86px, 11vmin, 118px), calc(var(--avatar-size) + 56px));
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -367,16 +370,87 @@ body {
   transform: none;
 }
 
-/* 进入下载界面时把主界面的书签与头像/名字一起收掉，只留返回按钮 */
+/* 进入下载界面时，书签与头像/名字从右往左烧掉：
+   --burn 是烧蚀边界的位置，130% 时还在画面右侧之外 */
 .bookmark,
 .profile {
-  transition: opacity 0.32s ease, visibility 0.32s;
+  -webkit-mask-image: linear-gradient(90deg,
+    #000 0,
+    #000 calc(var(--burn) - 34px),
+    rgba(0, 0, 0, 0.9) calc(var(--burn) - 24px),
+    rgba(0, 0, 0, 0.42) calc(var(--burn) - 18px),
+    rgba(0, 0, 0, 0.86) calc(var(--burn) - 12px),
+    rgba(0, 0, 0, 0.3) calc(var(--burn) - 6px),
+    rgba(0, 0, 0, 0.8) var(--burn),
+    rgba(0, 0, 0, 0.28) calc(var(--burn) + 6px),
+    rgba(0, 0, 0, 0.7) calc(var(--burn) + 12px),
+    rgba(0, 0, 0, 0.2) calc(var(--burn) + 19px),
+    transparent calc(var(--burn) + 32px));
+  -webkit-mask-repeat: no-repeat;
+  mask-image: linear-gradient(90deg,
+    #000 0,
+    #000 calc(var(--burn) - 34px),
+    rgba(0, 0, 0, 0.9) calc(var(--burn) - 24px),
+    rgba(0, 0, 0, 0.42) calc(var(--burn) - 18px),
+    rgba(0, 0, 0, 0.86) calc(var(--burn) - 12px),
+    rgba(0, 0, 0, 0.3) calc(var(--burn) - 6px),
+    rgba(0, 0, 0, 0.8) var(--burn),
+    rgba(0, 0, 0, 0.28) calc(var(--burn) + 6px),
+    rgba(0, 0, 0, 0.7) calc(var(--burn) + 12px),
+    rgba(0, 0, 0, 0.2) calc(var(--burn) + 19px),
+    transparent calc(var(--burn) + 32px));
+  mask-repeat: no-repeat;
 }
 
 body.is-download-page .bookmark,
 body.is-download-page .profile {
-  opacity: 0;
   visibility: hidden;
+  pointer-events: none;
+  transition: visibility 0s linear 1.05s;
+}
+
+/* 烧蚀边缘的火光，跟着同一条边界从右扫到左 */
+.burn-edge {
+  position: fixed;
+  left: var(--band-left);
+  right: calc(100% - var(--band-right));
+  top: calc(8vh + var(--avatar-size) * 0.5);
+  translate: 0 -50%;
+  height: calc(var(--avatar-size) + 18px);
+  z-index: 4;
+  pointer-events: none;
+  opacity: 0;
+  background:
+    radial-gradient(circle at calc(var(--burn) - 3px) 34%, rgba(255, 244, 214, 0.95) 0 1.4px, rgba(255, 200, 120, 0) 3px),
+    radial-gradient(circle at calc(var(--burn) + 4px) 58%, rgba(255, 226, 170, 0.9) 0 1px, rgba(255, 200, 120, 0) 2.4px),
+    radial-gradient(circle at calc(var(--burn) - 8px) 72%, rgba(255, 190, 120, 0.85) 0 1.2px, rgba(255, 200, 120, 0) 2.6px),
+    radial-gradient(circle at calc(var(--burn) + 9px) 46%, rgba(255, 214, 150, 0.7) 0 0.9px, rgba(255, 200, 120, 0) 2px),
+    linear-gradient(
+      90deg,
+      transparent calc(var(--burn) - 34px),
+      rgba(255, 176, 90, 0.14) calc(var(--burn) - 22px),
+      rgba(255, 148, 52, 0.55) calc(var(--burn) - 10px),
+      rgba(255, 214, 140, 0.95) calc(var(--burn) - 2px),
+      rgba(255, 250, 232, 1) calc(var(--burn) + 1px),
+      rgba(255, 158, 66, 0.85) calc(var(--burn) + 6px),
+      rgba(190, 66, 18, 0.4) calc(var(--burn) + 14px),
+      transparent calc(var(--burn) + 28px)
+    );
+  -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 18%, #000 82%, transparent 100%);
+  mask-image: linear-gradient(180deg, transparent 0%, #000 18%, #000 82%, transparent 100%);
+  filter: blur(2.2px) saturate(1.25);
+  mix-blend-mode: screen;
+}
+
+body.is-download-page .burn-edge {
+  animation: burn-edge-glow 1.05s cubic-bezier(0.33, 0.02, 0.3, 1) forwards;
+}
+
+@keyframes burn-edge-glow {
+  0% { opacity: 0; }
+  12% { opacity: 0.95; }
+  78% { opacity: 0.8; }
+  100% { opacity: 0; }
 }
 
 
