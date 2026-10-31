@@ -2,17 +2,15 @@
   --bg: #05070d;
 
   /* ============================================================
-     书签三件套：大小 + 位置（要调就只改这一段）
-       -size：尺寸 —— 头像直径 / 纹章宽度 / 名字字号
+     书签两件套：大小 + 位置（要调就只改这一段）
+       -size：尺寸 —— 头像直径 / 名字字号
        -pos ：位置微调，两个值「左右 上下」，正数向右 / 向下，
-              只写一个值就只调左右，如 --crest-pos: -12px;
-              默认三个东西在书签上自动均分，这里的数值是在
+              只写一个值就只调左右，如 --name-pos: -12px;
+              默认两个东西在书签上自动分列两端，这里的数值是在
               自动位置基础上再偏移。
      ============================================================ */
   --avatar-size: clamp(96px, 13vw, 150px);
   --avatar-pos: 90px 0px;
-  --crest-size: clamp(26px, 3vw, 34px);
-  --crest-pos: -272px 0px;
   --name-size: clamp(22px, 3.4vw, 34px);
   --name-pos: -160px 0px;
 
@@ -184,8 +182,8 @@ body {
   pointer-events: auto;
 }
 
-/* 头像 + 纹章 + 名字的横向布局：
-   铺满整条书签，三者沿书签分开排布（左头像 → 中纹章 → 右名字） */
+/* 头像 + 名字的横向布局：
+   铺满整条书签，两者分列两端（左头像 → 右名字） */
 .profile {
   position: fixed;
   left: var(--band-left);
@@ -289,14 +287,15 @@ body {
   pointer-events: none;
 }
 
-/* 左端：从书签左边缘向内展开的多边形层叠底托 */
-.bookmark__wing {
+/* 头像左侧的纹章式饰件：宽度收在书签左内边距 + 头像左偏移以内，不越过头像左边缘 */
+.bookmark__seal {
   position: absolute;
   left: 0;
   top: 0;
-  width: clamp(200px, 31%, 430px);
+  width: 92px;
   height: 100%;
   pointer-events: none;
+  filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.45)) drop-shadow(0 0 10px rgba(96, 170, 255, 0.18));
 }
 
 /* 右段空位：由大到小的蓝宝石饰带 */
@@ -328,35 +327,6 @@ body {
 .ui-band__ornament--right {
   right: 14px;
   scale: -1 1;
-}
-
-/* 骑士纹章 */
-.crest {
-  position: relative;
-  z-index: 2;
-  width: var(--crest-size);
-  translate: var(--crest-pos);
-  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.7));
-}
-
-/* 纹章背板：六边切面 + 蓝宝石，垫在纹章后面形成层次 */
-.crest__art {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: min(285%, 8.8vmin);
-  height: auto;
-  translate: -50% -50%;
-  z-index: -1;
-  pointer-events: none;
-  filter: drop-shadow(0 6px 16px rgba(0, 0, 0, 0.5)) drop-shadow(0 0 14px rgba(96, 170, 255, 0.16));
-}
-
-.crest__sigil {
-  position: relative;
-  display: block;
-  width: 100%;
-  height: auto;
 }
 
 /* 书签上的名字：暖金渐变 */
