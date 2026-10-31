@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="dark">
   <title>Fa_HT</title>
-  <link rel="stylesheet" href="style.css?v=14">
+  <link rel="stylesheet" href="style.css?v=16">
 </head>
 <body>
 
@@ -82,7 +82,30 @@
       </svg>
     </div>
     <div class="ui-band__inner" id="uiBandInner">
-      <!-- 可交互内容放这里 -->
+      <!-- 主界面：居中的下载入口 -->
+      <section class="band-view band-view--main" id="dlMainView" aria-label="Home">
+        <button class="dl-entry" id="dlEnter" type="button" aria-controls="dlView" aria-expanded="false">
+          <span class="dl-entry__mark" aria-hidden="true">
+            <svg viewBox="0 0 28 28" focusable="false">
+              <path d="M14 4.8v12.4" />
+              <path d="M9.1 12.8 14 17.7l4.9-4.9" />
+              <path d="M8.2 23h11.6" />
+            </svg>
+          </span>
+          <span class="dl-entry__title">Download</span>
+          <span class="dl-entry__note">Latest release</span>
+        </button>
+      </section>
+
+      <!-- 下载界面：暂时留空，只保留左上角返回 -->
+      <section class="band-view band-view--download" id="dlView" aria-label="Download" aria-hidden="true">
+        <button class="dl-back" id="dlBack" type="button">
+          <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+            <path d="M10.2 3.4 5.8 8l4.4 4.6" />
+          </svg>
+          <span>Back</span>
+        </button>
+      </section>
     </div>
   </div>
 
@@ -368,6 +391,45 @@
       root.style.removeProperty('--band-bottom');
       return window.getBandBox();
     };
+
+    // 模糊带内的界面切换：主界面 ⇄ 下载界面（只在带内变化）
+    (function () {
+      var inner = document.getElementById('uiBandInner');
+      var enter = document.getElementById('dlEnter');
+      var back = document.getElementById('dlBack');
+      var mainView = document.getElementById('dlMainView');
+      var dlView = document.getElementById('dlView');
+      if (!inner || !enter || !back) return;
+
+      function showDownload(on) {
+        inner.classList.toggle('is-download', on);
+        document.body.classList.toggle('is-download-page', on);
+        enter.setAttribute('aria-expanded', on ? 'true' : 'false');
+        if (mainView) mainView.setAttribute('aria-hidden', on ? 'true' : 'false');
+        if (dlView) dlView.setAttribute('aria-hidden', on ? 'false' : 'true');
+
+        var target = on ? back : enter;
+        window.requestAnimationFrame(function () {
+          if (inner.classList.contains('is-download') === on) {
+            target.focus({ preventScroll: true });
+          }
+        });
+      }
+
+      enter.addEventListener('click', function () {
+        showDownload(true);
+      });
+
+      back.addEventListener('click', function () {
+        showDownload(false);
+      });
+
+      document.addEventListener('keydown', function (event) {
+        if (event.key === 'Escape' && inner.classList.contains('is-download')) {
+          showDownload(false);
+        }
+      });
+    })();
   </script>
 
 </body>

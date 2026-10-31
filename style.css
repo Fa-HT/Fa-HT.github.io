@@ -45,12 +45,14 @@ body {
   font-family: system-ui, -apple-system, "Segoe UI", "Microsoft YaHei", sans-serif;
 }
 
-/* 页面承载容器：内容靠上排布，和两条竖线对齐 */
+/* 页面承载容器：内容靠上排布，和两条竖线对齐；
+   自身不拦截点击，让模糊带里的 UI 能收到事件 */
 .stage {
   min-height: 100vh;
   display: grid;
   place-items: start center;
   padding: 8vh 24px 24px;
+  pointer-events: none;
 }
 
 /* 背景视频：铺满视口，裁切多余部分 */
@@ -85,7 +87,8 @@ body {
   bottom: calc(100% - var(--band-bottom));
   left: var(--band-left);
   right: calc(100% - var(--band-right));
-  z-index: -1;
+  /* 0：让带内的 UI 能收到点击；书签与头像靠更高的 z 叠在上面 */
+  z-index: 0;
   pointer-events: none;
   border-radius: 28px;
   overflow: hidden;
@@ -186,6 +189,7 @@ body {
    铺满整条书签，两者分列两端（左头像 → 右名字） */
 .profile {
   position: fixed;
+  z-index: 3; /* 书签为 1、模糊带为 0，头像和名字要压在它们之上 */
   left: var(--band-left);
   right: calc(100% - var(--band-right));
   top: calc(8vh + var(--avatar-size) * 0.5);
@@ -209,7 +213,7 @@ body {
   top: calc(8vh + var(--avatar-size) * 0.5);
   height: clamp(86px, 11vmin, 118px);
   transform: translateY(-50%);
-  z-index: -1;
+  z-index: 1;
   pointer-events: none;
   clip-path: polygon(0 0, 100% 0, 91% 50%, 100% 100%, 0 100%);
   background:
@@ -327,6 +331,198 @@ body {
 .ui-band__ornament--right {
   right: 14px;
   scale: -1 1;
+}
+
+/* ---------- 模糊带内的界面切换：主界面 ⇄ 下载界面 ---------- */
+
+.band-view {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  transition:
+    opacity 0.45s ease,
+    transform 0.45s cubic-bezier(0.2, 0.8, 0.2, 1),
+    visibility 0.45s;
+}
+
+/* 下载界面从书签下方开始排布，返回按钮落在左上角 */
+.band-view--download {
+  place-items: start;
+  padding: 22px;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(10px);
+}
+
+.ui-band__inner.is-download .band-view--main {
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+}
+
+.ui-band__inner.is-download .band-view--download {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+}
+
+/* 进入下载界面时把主界面的书签与头像/名字一起收掉，只留返回按钮 */
+.bookmark,
+.profile {
+  transition: opacity 0.32s ease, visibility 0.32s;
+}
+
+body.is-download-page .bookmark,
+body.is-download-page .profile {
+  opacity: 0;
+  visibility: hidden;
+}
+
+
+/* 下载入口：一条金线薄板，悬停时提亮并轻微上浮 */
+.dl-entry {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(8px, 1.4vh, 13px);
+  width: min(320px, 74%);
+  padding: clamp(22px, 3.4vh, 34px) 24px clamp(20px, 3vh, 30px);
+  border: 1px solid rgba(240, 214, 160, 0.46);
+  border-radius: 3px;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(120, 48, 62, 0.26) 0%,
+      rgba(30, 10, 16, 0.42) 100%
+    ),
+    rgba(16, 6, 10, 0.12);
+  box-shadow:
+    inset 0 0 0 1px rgba(240, 214, 160, 0.1),
+    inset 0 1px 0 rgba(255, 244, 220, 0.2),
+    0 18px 42px rgba(2, 4, 12, 0.22);
+  color: #f0d6a0;
+  font: inherit;
+  cursor: pointer;
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+  transition:
+    transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1),
+    border-color 0.35s ease,
+    box-shadow 0.35s ease;
+}
+
+/* 薄板左右各一枚小菱形，呼应书签上的宝石 */
+.dl-entry::before,
+.dl-entry::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 7px;
+  height: 7px;
+  margin-top: -3.5px;
+  border: 1px solid rgba(240, 214, 160, 0.5);
+  rotate: 45deg;
+  transition:
+    border-color 0.35s ease,
+    box-shadow 0.35s ease;
+}
+
+.dl-entry::before {
+  left: -4px;
+}
+
+.dl-entry::after {
+  right: -4px;
+}
+
+.dl-entry__mark {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  color: #e8c98d;
+  filter: drop-shadow(0 0 10px rgba(240, 200, 130, 0.25));
+}
+
+.dl-entry__mark svg {
+  width: 100%;
+  height: 100%;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.15;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.dl-entry__title {
+  font-family: "Palatino Linotype", "Book Antiqua", Palatino, Georgia,
+    "Times New Roman", serif;
+  font-size: clamp(17px, 1.6vw, 23px);
+  font-weight: 700;
+  letter-spacing: 0.34em;
+  padding-left: 0.34em;
+  text-transform: uppercase;
+  background-image: linear-gradient(180deg, #fff6de 0%, #e8c98a 46%, #b1803c 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 6px 16px rgba(240, 200, 130, 0.18));
+}
+
+.dl-entry__note {
+  font-size: clamp(8px, 0.62vw, 9.5px);
+  letter-spacing: 0.34em;
+  padding-left: 0.34em;
+  text-transform: uppercase;
+  color: rgba(240, 214, 160, 0.58);
+}
+
+/* 下载界面的返回按钮 */
+.dl-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 9px 16px 9px 12px;
+  border: 1px solid rgba(240, 214, 160, 0.3);
+  border-radius: 999px;
+  background: rgba(16, 6, 10, 0.28);
+  color: rgba(240, 214, 160, 0.82);
+  font-family: "Palatino Linotype", "Book Antiqua", Palatino, Georgia,
+    "Times New Roman", serif;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  cursor: pointer;
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+  transition:
+    color 0.3s ease,
+    border-color 0.3s ease,
+    background-color 0.3s ease,
+    transform 0.3s ease;
+}
+
+.dl-back span {
+  padding-left: 0.24em;
+}
+
+.dl-back svg {
+  width: 13px;
+  height: 13px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.dl-entry:focus-visible,
+.dl-back:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(240, 214, 160, 0.5);
 }
 
 /* 书签上的名字：暖金渐变 */
@@ -497,6 +693,34 @@ body {
   .avatar:hover .avatar__ring {
     filter: brightness(1.35) saturate(1.2);
   }
+
+  .dl-entry:hover {
+    transform: translateY(-2px);
+    border-color: rgba(240, 214, 160, 0.62);
+    box-shadow:
+      inset 0 0 0 1px rgba(240, 214, 160, 0.16),
+      inset 0 1px 0 rgba(255, 244, 220, 0.2),
+      0 24px 52px rgba(2, 4, 12, 0.34),
+      0 0 26px rgba(240, 200, 130, 0.16);
+  }
+
+  .dl-entry:hover::before,
+  .dl-entry:hover::after {
+    border-color: rgba(240, 214, 160, 0.85);
+    box-shadow: 0 0 8px rgba(240, 200, 130, 0.45);
+  }
+
+  .dl-entry:hover .dl-entry__mark {
+    color: #fbe7bd;
+    filter: drop-shadow(0 0 14px rgba(240, 200, 130, 0.45));
+  }
+
+  .dl-back:hover {
+    color: #fdf3d8;
+    border-color: rgba(240, 214, 160, 0.6);
+    background: rgba(40, 14, 22, 0.42);
+    transform: translateX(-2px);
+  }
 }
 
 .avatar__frame::after {
@@ -590,5 +814,21 @@ body {
 
   .avatar__inner {
     transition: none;
+  }
+
+  .band-view,
+  .dl-entry,
+  .dl-entry::before,
+  .dl-entry::after,
+  .dl-entry__title,
+  .dl-entry__note,
+  .dl-back {
+    transition: none;
+  }
+
+  .ui-band__inner.is-download .band-view--main,
+  .ui-band__inner.is-download .band-view--download,
+  .band-view--download {
+    transform: none;
   }
 }
