@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="dark">
   <title>Fa_HT</title>
-  <link rel="stylesheet" href="style.css?v=18">
+  <link rel="stylesheet" href="style.css?v=19">
 </head>
 <body>
 
@@ -233,6 +233,7 @@
     </div>
 
     <div class="burn-edge" aria-hidden="true"></div>
+    <canvas class="burn-canvas" aria-hidden="true"></canvas>
 
     <section class="profile">
       <figure class="avatar">
@@ -362,29 +363,139 @@
       var dlView = document.getElementById('dlView');
       if (!inner || !enter || !back) return;
 
-      // 书签与头像/名字从右往左烧掉：逐帧推进 --burn，避免依赖自定义属性的过渡
+      // 书签与头像/名字从右往左烧掉：逐帧推进 --burn，同时沿边界喷出带物理扩散的火星
       var burnRAF = 0;
+      var burnParticles = [];
+      var burnCanvas = document.querySelector('.burn-canvas');
+      var burnCtx = burnCanvas ? burnCanvas.getContext('2d') : null;
+      var burnGeom = null;
+
       function setBurn(value) {
         document.documentElement.style.setProperty('--burn', value + '%');
       }
+
+      function clearEmbers() {
+        burnParticles.length = 0;
+        if (burnCtx) burnCtx.clearRect(0, 0, burnCanvas.width, burnCanvas.height);
+      }
+
       function stopBurn() {
         window.cancelAnimationFrame(burnRAF);
         burnRAF = 0;
+        clearEmbers();
       }
+
+      function measureBurn() {
+        if (!burnCanvas || !burnCtx) return null;
+        var box = burnCanvas.getBoundingClientRect();
+        var dpr = Math.min(2, window.devicePixelRatio || 1);
+        var w = Math.max(1, Math.round(box.width * dpr));
+        var h = Math.max(1, Math.round(box.height * dpr));
+        if (burnCanvas.width !== w || burnCanvas.height !== h) {
+          burnCanvas.width = w;
+          burnCanvas.height = h;
+        }
+        burnCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        var ribbon = document.querySelector('.bookmark');
+        var r = ribbon ? ribbon.getBoundingClientRect() : null;
+        return {
+          w: box.width,
+          h: box.height,
+          top: r ? r.top - box.top : box.height * 0.4,
+          height: r ? r.height : box.height * 0.12
+        };
+      }
+
+      // 沿烧蚀边界持续喷出火星：速度带随机扩散、重力、空气阻力与湍流
+      function spawnEmbers(burn, dt) {
+        if (!burnGeom || burn <= -12) return;
+        var edge = burnGeom.w * (burn / 100);
+        var count = Math.min(22, Math.round(420 * dt));
+        for (var i = 0; i < count; i++) {
+          var angle = (-Math.PI / 2) + (Math.random() - 0.5) * 2.2;
+          var speed = 30 + Math.random() * 200;
+          burnParticles.push({
+            x: edge + (Math.random() - 0.5) * 12,
+            y: burnGeom.top + Math.random() * burnGeom.height + (Math.random() - 0.5) * 14,
+            vx: Math.cos(angle) * speed + 40 + Math.random() * 70 - (Math.random() < 0.18 ? 110 : 0),
+            vy: Math.sin(angle) * speed,
+            size: 0.9 + Math.random() * 3.0,
+            life: 0.5 + Math.random() * 0.8,
+            age: 0,
+            seed: Math.random() * 6.283,
+            streak: Math.random() < 0.3
+          });
+        }
+      }
+
+      function stepEmbers(dt) {
+        if (!burnCtx) return;
+        burnCtx.clearRect(0, 0, burnCanvas.width, burnCanvas.height);
+        if (!burnParticles.length) return;
+        burnCtx.globalCompositeOperation = 'lighter';
+        for (var i = burnParticles.length - 1; i >= 0; i--) {
+          var p = burnParticles[i];
+          p.age += dt;
+          if (p.age >= p.life) {
+            burnParticles.splice(i, 1);
+            continue;
+          }
+          p.vy += 150 * dt;
+          var drag = Math.exp(-1.6 * dt);
+          p.vx *= drag;
+          p.vy *= drag;
+          p.vx += Math.sin(p.age * 9 + p.seed) * 26 * dt;
+          p.x += p.vx * dt;
+          p.y += p.vy * dt;
+
+          var t = p.age / p.life;
+          var a = Math.pow(1 - t, 0.8) * Math.min(1, t * 7);
+          var radius = Math.max(0.35, p.size * (1 - 0.5 * t));
+
+          if (p.streak) {
+            var sp = Math.hypot(p.vx, p.vy) || 1;
+            burnCtx.strokeStyle = 'rgba(255,196,110,' + (a * 0.9).toFixed(3) + ')';
+            burnCtx.lineWidth = Math.max(0.7, radius * 1.1);
+            burnCtx.beginPath();
+            burnCtx.moveTo(p.x, p.y);
+            burnCtx.lineTo(p.x - (p.vx / sp) * radius * 5, p.y - (p.vy / sp) * radius * 5);
+            burnCtx.stroke();
+          }
+
+          burnCtx.fillStyle = 'rgba(255,142,52,' + (a * 0.18).toFixed(3) + ')';
+          burnCtx.beginPath(); burnCtx.arc(p.x, p.y, radius * 2.6, 0, Math.PI * 2); burnCtx.fill();
+
+          burnCtx.fillStyle = 'rgba(255,196,110,' + (a * 0.45).toFixed(3) + ')';
+          burnCtx.beginPath(); burnCtx.arc(p.x, p.y, radius * 1.45, 0, Math.PI * 2); burnCtx.fill();
+
+          burnCtx.fillStyle = 'rgba(255,246,214,' + (a * 0.98).toFixed(3) + ')';
+          burnCtx.beginPath(); burnCtx.arc(p.x, p.y, radius, 0, Math.PI * 2); burnCtx.fill();
+        }
+      }
+
       function playBurn() {
         stopBurn();
+        burnGeom = measureBurn();
         var from = 130;
         var to = -30;
         var duration = 1050;
         var start = window.performance.now();
+        var last = start;
         function frame(now) {
+          var dt = Math.min(0.05, Math.max(0.001, (now - last) / 1000));
+          last = now;
           var p = Math.min(1, (now - start) / duration);
           var eased = p < 0.5
             ? 4 * p * p * p
             : 1 - Math.pow(-2 * p + 2, 3) / 2;
-          setBurn(from + (to - from) * eased);
-          if (p < 1) {
+          var value = from + (to - from) * eased;
+          setBurn(value);
+          spawnEmbers(value, dt);
+          stepEmbers(dt);
+          if (p < 1 || burnParticles.length) {
             burnRAF = window.requestAnimationFrame(frame);
+          } else {
+            burnRAF = 0;
           }
         }
         burnRAF = window.requestAnimationFrame(frame);
