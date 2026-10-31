@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="dark">
   <title>Fa_HT</title>
-  <link rel="stylesheet" href="style.css?v=11">
+  <link rel="stylesheet" href="style.css?v=12">
 </head>
 <body>
 
@@ -15,10 +15,72 @@
   </video>
   <div class="bg-shade" aria-hidden="true"></div>
 
+  <!-- 复用的角部装饰图形：模糊区块下方左右两角共用 -->
+  <svg class="ornament-defs" width="0" height="0" aria-hidden="true" focusable="false">
+    <defs>
+      <radialGradient id="cnWash" cx="0" cy="1" r="1">
+        <stop offset="0" stop-color="rgba(240, 206, 150, 0.2)" />
+        <stop offset="0.55" stop-color="rgba(240, 206, 150, 0.05)" />
+        <stop offset="1" stop-color="rgba(240, 206, 150, 0)" />
+      </radialGradient>
+      <linearGradient id="cnGold" x1="0" y1="1" x2="1" y2="0">
+        <stop offset="0" stop-color="rgba(240, 214, 160, 0.9)" />
+        <stop offset="1" stop-color="rgba(240, 214, 160, 0)" />
+      </linearGradient>
+      <linearGradient id="cnBlue" x1="0" y1="0" x2="0.9" y2="1">
+        <stop offset="0" stop-color="#e2f4ff" />
+        <stop offset="0.3" stop-color="#8ecbf2" />
+        <stop offset="0.65" stop-color="#3576bd" />
+        <stop offset="1" stop-color="#0c274b" />
+      </linearGradient>
+    </defs>
+    <symbol id="cnCornerArt" viewBox="0 0 240 240">
+      <rect width="240" height="240" fill="url(#cnWash)" />
+
+      <polygon points="0,240 150,240 0,90" fill="rgba(240, 214, 160, 0.035)" stroke="rgba(240, 214, 160, 0.34)" stroke-width="1" />
+      <polygon points="0,240 92,240 0,148" fill="rgba(240, 214, 160, 0.05)" stroke="rgba(240, 214, 160, 0.22)" stroke-width="0.9" />
+
+      <path d="M10 240 V168" stroke="rgba(240, 214, 160, 0.5)" stroke-width="1" />
+      <path d="M168 240 H10" stroke="rgba(240, 214, 160, 0.5)" stroke-width="1" />
+
+      <path d="M0 240 L176 64" stroke="url(#cnGold)" stroke-width="1.1" />
+      <path d="M0 240 L118 122" stroke="rgba(240, 214, 160, 0.28)" stroke-width="1" />
+      <path d="M0 240 L208 32" stroke="rgba(240, 214, 160, 0.18)" stroke-width="1" />
+
+      <g transform="translate(46 194)">
+        <polygon points="0,-10 6.2,-1 0,10 -6.2,-1" fill="none" stroke="rgba(240, 214, 160, 0.8)" stroke-width="1" />
+        <polygon points="0,-10 5.2,0 0,10 -5.2,0" fill="url(#cnBlue)" />
+        <polygon points="0,-10 0,0 -5.2,0" fill="rgba(255, 255, 255, 0.4)" />
+        <polygon points="0,10 0,0 5.2,0" fill="rgba(3, 14, 32, 0.5)" />
+      </g>
+      <g transform="translate(84 156)">
+        <polygon points="0,-7.2 4.5,-1 0,7.2 -4.5,-1" fill="none" stroke="rgba(240, 214, 160, 0.62)" stroke-width="0.9" />
+        <polygon points="0,-7.2 3.7,0 0,7.2 -3.7,0" fill="url(#cnBlue)" />
+        <polygon points="0,-7.2 0,0 -3.7,0" fill="rgba(255, 255, 255, 0.34)" />
+      </g>
+      <g transform="translate(116 124)">
+        <polygon points="0,-4.8 3,-1 0,4.8 -3,-1" fill="none" stroke="rgba(240, 214, 160, 0.5)" stroke-width="0.8" />
+        <polygon points="0,-4.8 2.5,0 0,4.8 -2.5,0" fill="url(#cnBlue)" opacity="0.92" />
+      </g>
+    </symbol>
+  </svg>
+
   <!-- 两条竖线之间的模糊带：将来在这里放可交互 UI -->
   <div class="ui-band" id="uiBand">
     <div class="ui-band__blur" aria-hidden="true"></div>
     <div class="ui-band__frame" aria-hidden="true"></div>
+
+    <!-- 模糊区块下方两角：宝石射线，左右镜像 -->
+    <div class="ui-band__ornament ui-band__ornament--left" aria-hidden="true">
+      <svg viewBox="0 0 240 240" focusable="false">
+        <use href="#cnCornerArt" />
+      </svg>
+    </div>
+    <div class="ui-band__ornament ui-band__ornament--right" aria-hidden="true">
+      <svg viewBox="0 0 240 240" focusable="false">
+        <use href="#cnCornerArt" />
+      </svg>
+    </div>
     <div class="ui-band__inner" id="uiBandInner">
       <!-- 可交互内容放这里 -->
     </div>
@@ -26,7 +88,70 @@
 
   <main class="stage">
     <!-- 书签横幅：横贯整块模糊区域，把头像、纹章和名字分散串起来 -->
-    <div class="bookmark" aria-hidden="true"></div>
+    <div class="bookmark" aria-hidden="true">
+      <div class="bookmark__trim">
+        <!-- 右段空位：由大到小的蓝宝石饰带 -->
+        <svg class="bookmark__gems" viewBox="0 0 200 80" focusable="false">
+          <defs>
+            <linearGradient id="bmRail" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0" stop-color="rgba(240, 214, 160, 0)" />
+              <stop offset="0.18" stop-color="rgba(240, 214, 160, 0.55)" />
+              <stop offset="0.8" stop-color="rgba(240, 214, 160, 0.5)" />
+              <stop offset="1" stop-color="rgba(240, 214, 160, 0)" />
+            </linearGradient>
+            <linearGradient id="bmBlue" x1="0" y1="0" x2="0.9" y2="1">
+              <stop offset="0" stop-color="#e6f6ff" />
+              <stop offset="0.28" stop-color="#9bd4f6" />
+              <stop offset="0.62" stop-color="#3d82c9" />
+              <stop offset="1" stop-color="#0e2b52" />
+            </linearGradient>
+            <radialGradient id="bmGlow">
+              <stop offset="0" stop-color="rgba(96, 178, 255, 0.5)" />
+              <stop offset="1" stop-color="rgba(96, 178, 255, 0)" />
+            </radialGradient>
+          </defs>
+
+          <ellipse cx="64" cy="40" rx="50" ry="27" fill="url(#bmGlow)" />
+          <path d="M4 40 H196" stroke="url(#bmRail)" stroke-width="1.3" />
+          <path d="M4 42.4 H196" stroke="rgba(0, 0, 0, 0.35)" stroke-width="1" />
+
+          <g transform="translate(26 40)">
+            <polygon points="0,-4.6 2.9,-0.6 0,4.6 -2.9,-0.6" fill="none" stroke="rgba(240, 214, 160, 0.55)" stroke-width="0.9" />
+            <polygon points="0,-4.6 2.4,0 0,4.6 -2.4,0" fill="url(#bmBlue)" />
+          </g>
+          <g transform="translate(64 40)">
+            <polygon points="0,-19.5 12,-2 0,19.5 -12,-2" fill="none" stroke="rgba(240, 214, 160, 0.82)" stroke-width="1.1" />
+            <polygon points="0,-19.5 10.1,0 0,19.5 -10.1,0" fill="url(#bmBlue)" />
+            <polygon points="0,-19.5 0,0 -10.1,0" fill="rgba(255, 255, 255, 0.44)" />
+            <polygon points="0,19.5 0,0 10.1,0" fill="rgba(3, 14, 32, 0.52)" />
+            <polygon points="0,-19.5 2.6,-11.2 0,-5.8 -2.6,-11.2" fill="rgba(255, 255, 255, 0.9)" />
+          </g>
+          <g transform="translate(118 40)">
+            <polygon points="0,-13 8,-1.3 0,13 -8,-1.3" fill="none" stroke="rgba(240, 214, 160, 0.7)" stroke-width="0.9" />
+            <polygon points="0,-13 6.8,0 0,13 -6.8,0" fill="url(#bmBlue)" />
+            <polygon points="0,-13 0,0 -6.8,0" fill="rgba(255, 255, 255, 0.36)" />
+            <polygon points="0,13 0,0 6.8,0" fill="rgba(3, 14, 32, 0.45)" />
+          </g>
+          <g transform="translate(158 40)">
+            <polygon points="0,-8.6 5.3,-0.9 0,8.6 -5.3,-0.9" fill="none" stroke="rgba(240, 214, 160, 0.6)" stroke-width="0.9" />
+            <polygon points="0,-8.6 4.5,0 0,8.6 -4.5,0" fill="url(#bmBlue)" />
+            <polygon points="0,-8.6 0,0 -4.5,0" fill="rgba(255, 255, 255, 0.3)" />
+          </g>
+          <g transform="translate(182 40)">
+            <polygon points="0,-5.4 3.4,-0.7 0,5.4 -3.4,-0.7" fill="none" stroke="rgba(240, 214, 160, 0.5)" stroke-width="0.8" />
+            <polygon points="0,-5.4 2.7,0 0,5.4 -2.7,0" fill="url(#bmBlue)" opacity="0.95" />
+          </g>
+
+          <g fill="rgba(240, 214, 160, 0.75)">
+            <polygon points="92,38.4 93.6,40 92,41.6 90.4,40" />
+            <polygon points="140,38.4 141.6,40 140,41.6 138.4,40" />
+            <polygon points="170,38.9 171.1,40 170,41.1 168.9,40" />
+          </g>
+          <polygon points="184,24 198,40 184,56" fill="rgba(240, 214, 160, 0.12)" stroke="rgba(240, 214, 160, 0.4)" stroke-width="0.8" />
+          <path d="M2 32 L12 40 L2 48" fill="none" stroke="rgba(240, 214, 160, 0.35)" stroke-width="0.9" />
+        </svg>
+      </div>
+    </div>
 
     <section class="profile">
       <figure class="avatar">
@@ -43,7 +168,84 @@
       </figure>
 
       <div class="crest" aria-hidden="true">
-        <svg viewBox="0 0 64 80" focusable="false">
+        <!-- 纹章背板：六边切面 + 蓝宝石，让纹章有和头像同层的层次 -->
+        <svg class="crest__art" viewBox="0 0 200 240" focusable="false">
+          <defs>
+            <radialGradient id="crGlow">
+              <stop offset="0" stop-color="rgba(120, 190, 255, 0.32)" />
+              <stop offset="0.55" stop-color="rgba(240, 200, 130, 0.12)" />
+              <stop offset="1" stop-color="rgba(240, 200, 130, 0)" />
+            </radialGradient>
+            <linearGradient id="crPlate" x1="0" y1="0" x2="0.6" y2="1">
+              <stop offset="0" stop-color="#7b3040" />
+              <stop offset="0.55" stop-color="#45161f" />
+              <stop offset="1" stop-color="#240a10" />
+            </linearGradient>
+            <linearGradient id="crGold" x1="0" y1="0" x2="0.4" y2="1">
+              <stop offset="0" stop-color="#fff3d6" />
+              <stop offset="0.5" stop-color="#e2bd7b" />
+              <stop offset="1" stop-color="#a9772a" />
+            </linearGradient>
+            <linearGradient id="crBlue" x1="0" y1="0" x2="0.9" y2="1">
+              <stop offset="0" stop-color="#dff2ff" />
+              <stop offset="0.32" stop-color="#8ecbf2" />
+              <stop offset="0.66" stop-color="#3576bd" />
+              <stop offset="1" stop-color="#0c274b" />
+            </linearGradient>
+          </defs>
+
+          <ellipse cx="100" cy="120" rx="80" ry="90" fill="url(#crGlow)" />
+
+          <polygon points="100,22 186,120 100,218 14,120" fill="none" stroke="rgba(240, 214, 160, 0.32)" stroke-width="1" />
+          <polygon points="100,40 168,120 100,200 32,120" fill="none" stroke="rgba(120, 190, 255, 0.2)" stroke-width="0.9" />
+
+          <polygon points="100,44 154,74 154,166 100,196 46,166 46,74" fill="url(#crPlate)" stroke="url(#crGold)" stroke-width="2.6" />
+          <polygon points="100,58 142,82 142,158 100,182 58,158 58,82" fill="rgba(12, 4, 9, 0.55)" stroke="rgba(240, 214, 160, 0.42)" stroke-width="0.9" />
+
+          <g fill="rgba(255, 236, 206, 0.06)">
+            <polygon points="100,120 100,58 142,82" />
+            <polygon points="100,120 142,82 142,158" />
+            <polygon points="100,120 142,158 100,182" />
+            <polygon points="100,120 100,182 58,158" />
+            <polygon points="100,120 58,158 58,82" />
+            <polygon points="100,120 58,82 100,58" />
+          </g>
+          <g fill="rgba(0, 0, 0, 0.12)">
+            <polygon points="100,120 100,58 58,82" />
+            <polygon points="100,120 142,158 142,82" />
+            <polygon points="100,120 100,182 142,158" />
+          </g>
+
+          <g stroke="rgba(240, 214, 160, 0.18)" stroke-width="0.8">
+            <path d="M100 120 V44" />
+            <path d="M100 120 L154 74" />
+            <path d="M100 120 L154 166" />
+            <path d="M100 120 V196" />
+            <path d="M100 120 L46 166" />
+            <path d="M100 120 L46 74" />
+          </g>
+
+          <g transform="translate(46 120)">
+            <polygon points="0,-7.4 4.9,-1 0,7.4 -4.9,-1" fill="none" stroke="rgba(240, 214, 160, 0.8)" stroke-width="1" />
+            <polygon points="0,-7.4 4,0 0,7.4 -4,0" fill="url(#crBlue)" />
+            <polygon points="0,-7.4 0,0 -4,0" fill="rgba(255, 255, 255, 0.4)" />
+          </g>
+          <g transform="translate(154 120)">
+            <polygon points="0,-7.4 4.9,-1 0,7.4 -4.9,-1" fill="none" stroke="rgba(240, 214, 160, 0.8)" stroke-width="1" />
+            <polygon points="0,-7.4 4,0 0,7.4 -4,0" fill="url(#crBlue)" />
+            <polygon points="0,-7.4 0,0 -4,0" fill="rgba(255, 255, 255, 0.4)" />
+          </g>
+          <g transform="translate(100 44)">
+            <polygon points="0,-4.8 3.3,-0.9 0,4.8 -3.3,-0.9" fill="none" stroke="rgba(240, 214, 160, 0.7)" stroke-width="0.9" />
+            <polygon points="0,-4.8 2.6,0 0,4.8 -2.6,0" fill="url(#crBlue)" />
+          </g>
+          <g transform="translate(100 196)">
+            <polygon points="0,-4.8 3.3,-0.9 0,4.8 -3.3,-0.9" fill="none" stroke="rgba(240, 214, 160, 0.55)" stroke-width="0.9" />
+            <polygon points="0,-4.8 2.6,0 0,4.8 -2.6,0" fill="url(#crBlue)" opacity="0.85" />
+          </g>
+        </svg>
+
+        <svg class="crest__sigil" viewBox="0 0 64 80" focusable="false">
           <defs>
             <linearGradient id="crestGold" x1="0" y1="0" x2="0" y2="1">
               <stop offset="0%" stop-color="#fff6e0" />

@@ -282,6 +282,44 @@ body {
   );
 }
 
+/* 书签上的多边形 / 宝石饰件（在书签裁切范围内，位于头像、名字之下） */
+.bookmark__trim {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+/* 右段空位：由大到小的蓝宝石饰带 */
+.bookmark__gems {
+  position: absolute;
+  right: 12.7%;
+  top: 50%;
+  width: 13%;
+  min-width: 118px;
+  max-width: 224px;
+  height: auto;
+  translate: 0 -50%;
+  filter: drop-shadow(0 0 7px rgba(90, 165, 255, 0.2));
+}
+
+/* 模糊区块下方两角的宝石射线装饰 */
+.ui-band__ornament {
+  position: absolute;
+  bottom: 14px;
+  width: clamp(118px, 11vmin, 226px);
+  height: auto;
+  pointer-events: none;
+}
+
+.ui-band__ornament--left {
+  left: 14px;
+}
+
+.ui-band__ornament--right {
+  right: 14px;
+  scale: -1 1;
+}
+
 /* 骑士纹章 */
 .crest {
   position: relative;
@@ -291,7 +329,21 @@ body {
   filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.7));
 }
 
-.crest svg {
+/* 纹章背板：六边切面 + 蓝宝石，垫在纹章后面形成层次 */
+.crest__art {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: min(285%, 8.8vmin);
+  height: auto;
+  translate: -50% -50%;
+  z-index: -1;
+  pointer-events: none;
+  filter: drop-shadow(0 6px 16px rgba(0, 0, 0, 0.5)) drop-shadow(0 0 14px rgba(96, 170, 255, 0.16));
+}
+
+.crest__sigil {
+  position: relative;
   display: block;
   width: 100%;
   height: auto;
