@@ -1,6 +1,21 @@
 :root {
   --bg: #05070d;
-  --size: clamp(96px, 13vw, 150px);
+
+  /* ============================================================
+     书签三件套：大小 + 位置（要调就只改这一段）
+       -size：尺寸 —— 头像直径 / 纹章宽度 / 名字字号
+       -pos ：位置微调，两个值「左右 上下」，正数向右 / 向下，
+              只写一个值就只调左右，如 --crest-pos: -12px;
+              默认三个东西在书签上自动均分，这里的数值是在
+              自动位置基础上再偏移。
+     ============================================================ */
+  --avatar-size: clamp(96px, 13vw, 150px);
+  --avatar-pos: 0px 0px;
+  --crest-size: clamp(26px, 3vw, 34px);
+  --crest-pos: 0px 0px;
+  --name-size: clamp(22px, 3.4vw, 34px);
+  --name-pos: 0px 0px;
+
   --ring: 6px;
   /* 两条竖线的位置：左边线 --band-left，右边线 --band-right */
   --band-left: 30%;
@@ -175,7 +190,7 @@ body {
   position: fixed;
   left: var(--band-left);
   right: calc(100% - var(--band-right));
-  top: calc(8vh + var(--size) * 0.5);
+  top: calc(8vh + var(--avatar-size) * 0.5);
   translate: 0 -50%;
   height: clamp(86px, 11vmin, 118px);
   display: flex;
@@ -193,7 +208,7 @@ body {
   position: fixed;
   left: var(--band-left);
   right: calc(100% - var(--band-right));
-  top: calc(8vh + var(--size) * 0.5);
+  top: calc(8vh + var(--avatar-size) * 0.5);
   height: clamp(86px, 11vmin, 118px);
   transform: translateY(-50%);
   z-index: -1;
@@ -271,7 +286,8 @@ body {
 .crest {
   position: relative;
   z-index: 2;
-  width: clamp(26px, 3vw, 34px);
+  width: var(--crest-size);
+  translate: var(--crest-pos);
   filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.7));
 }
 
@@ -289,7 +305,8 @@ body {
   padding-left: 0.12em;
   font-family: "Palatino Linotype", "Book Antiqua", Palatino, Georgia,
     "Times New Roman", serif;
-  font-size: clamp(22px, 3.4vw, 34px);
+  font-size: var(--name-size);
+  translate: var(--name-pos);
   font-weight: 700;
   line-height: 1;
   letter-spacing: 0.12em;
@@ -320,21 +337,22 @@ body {
 .avatar {
   position: relative;
   z-index: 2;
-  width: var(--size);
-  height: var(--size);
+  width: var(--avatar-size);
+  height: var(--avatar-size);
   margin: 0;
   display: grid;
   place-items: center;
   isolation: isolate;
   pointer-events: auto;
+  translate: var(--avatar-pos);
   animation: float 7s ease-in-out infinite;
 }
 
 /* 放大与取景移动都放在这一层，避免和浮动的 transform 打架 */
 .avatar__inner {
   position: relative;
-  width: var(--size);
-  height: var(--size);
+  width: var(--avatar-size);
+  height: var(--avatar-size);
   aspect-ratio: 1;
   display: grid;
   place-items: center;
