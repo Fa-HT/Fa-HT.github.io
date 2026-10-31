@@ -115,90 +115,32 @@
       <div class="bookmark__trim">
         <!-- 左端：头像左侧的纹章式宝石饰件，整体收在头像左边缘以内 -->
         <svg class="bookmark__seal" viewBox="0 0 100 120" preserveAspectRatio="xMinYMid meet" focusable="false">
-          <defs>
-            <radialGradient id="sealGlow">
-              <stop offset="0" stop-color="rgba(120, 190, 255, 0.22)" />
-              <stop offset="0.6" stop-color="rgba(240, 200, 130, 0.08)" />
-              <stop offset="1" stop-color="rgba(240, 200, 130, 0)" />
-            </radialGradient>
-            <linearGradient id="sealPlate" x1="0" y1="0" x2="0.6" y2="1">
-              <stop offset="0" stop-color="#6f2939" />
-              <stop offset="0.55" stop-color="#3b111b" />
-              <stop offset="1" stop-color="#1a060b" />
-            </linearGradient>
-            <linearGradient id="sealGold" x1="0" y1="0" x2="0.5" y2="1">
-              <stop offset="0" stop-color="#fff3d6" />
-              <stop offset="0.5" stop-color="#e2bd7b" />
-              <stop offset="1" stop-color="#a9772a" />
-            </linearGradient>
-            <linearGradient id="sealBlue" x1="0" y1="0" x2="0.9" y2="1">
-              <stop offset="0" stop-color="#dff2ff" />
-              <stop offset="0.32" stop-color="#8ecbf2" />
-              <stop offset="0.66" stop-color="#3576bd" />
-              <stop offset="1" stop-color="#0c274b" />
-            </linearGradient>
-            <linearGradient id="sealInner" x1="0" y1="0" x2="0.3" y2="1">
-              <stop offset="0" stop-color="rgba(100, 36, 51, 0.58)" />
-              <stop offset="0.55" stop-color="rgba(56, 18, 28, 0.68)" />
-              <stop offset="1" stop-color="rgba(22, 7, 12, 0.76)" />
-            </linearGradient>
-            <radialGradient id="sealCore">
-              <stop offset="0" stop-color="rgba(110, 180, 255, 0.3)" />
-              <stop offset="1" stop-color="rgba(110, 180, 255, 0)" />
-            </radialGradient>
-          </defs>
-
-          <ellipse cx="43" cy="60" rx="48" ry="54" fill="url(#sealGlow)" />
-
-          <!-- 尖顶六边形：左侧竖边正好落在书签左边缘上 -->
-          <polygon points="43.3,10 86.6,35 86.6,85 43.3,110 0,85 0,35"
-                   fill="url(#sealPlate)" stroke="url(#sealGold)" stroke-width="2.4" />
-          <polygon points="43.3,18 78.6,39 78.6,81 43.3,102 8,81 8,39"
-                   fill="url(#sealInner)" stroke="rgba(240, 214, 160, 0.4)" stroke-width="0.85" />
-
-          <g fill="rgba(255, 236, 206, 0.055)">
-            <polygon points="43.3,60 43.3,18 78.6,39" />
-            <polygon points="43.3,60 78.6,39 78.6,81" />
-            <polygon points="43.3,60 78.6,81 43.3,102" />
-            <polygon points="43.3,60 43.3,102 8,81" />
-            <polygon points="43.3,60 8,81 8,39" />
-            <polygon points="43.3,60 8,39 43.3,18" />
-          </g>
-          <g fill="rgba(0, 0, 0, 0.13)">
-            <polygon points="43.3,60 8,39 43.3,18" />
-            <polygon points="43.3,60 78.6,81 78.6,39" />
-            <polygon points="43.3,60 8,81 43.3,102" />
-          </g>
-
-          <path d="M43.3 20 V100" stroke="rgba(240, 214, 160, 0.16)" stroke-width="1" />
-
-          <g transform="translate(43.3 10)">
-            <polygon points="0,-4.2 2.9,-0.6 0,4.2 -2.9,-0.6" fill="none" stroke="rgba(240, 214, 160, 0.7)" stroke-width="0.85" />
-            <polygon points="0,-4.2 2.3,0 0,4.2 -2.3,0" fill="url(#sealBlue)" />
-          </g>
-          <g transform="translate(43.3 110)">
-            <polygon points="0,-4.2 2.9,-0.6 0,4.2 -2.9,-0.6" fill="none" stroke="rgba(240, 214, 160, 0.56)" stroke-width="0.85" />
-            <polygon points="0,-4.2 2.3,0 0,4.2 -2.3,0" fill="url(#sealBlue)" opacity="0.9" />
-          </g>
-          <g transform="translate(86.6 60)">
-            <polygon points="0,-4.6 3.2,-0.8 0,4.6 -3.2,-0.8" fill="none" stroke="rgba(240, 214, 160, 0.7)" stroke-width="0.85" />
-            <polygon points="0,-4.6 2.5,0 0,4.6 -2.5,0" fill="url(#sealBlue)" />
-          </g>
-          <g transform="translate(4 60)">
-            <polygon points="0,-3.6 2.5,-0.6 0,3.6 -2.5,-0.6" fill="none" stroke="rgba(240, 214, 160, 0.6)" stroke-width="0.85" />
-            <polygon points="0,-3.6 2,0 0,3.6 -2,0" fill="url(#sealBlue)" opacity="0.9" />
-          </g>
-
-          <ellipse cx="43" cy="60" rx="21" ry="24" fill="url(#sealCore)" />
-
-          <g transform="translate(43.3 60)">
-            <polygon points="0,-11 7.4,-1.7 0,11 -7.4,-1.7" fill="none" stroke="rgba(245, 220, 170, 0.9)" stroke-width="1.15" />
-            <polygon points="0,-11 6.1,0 0,11 -6.1,0" fill="url(#sealBlue)" />
-            <polygon points="0,-11 0,0 -6.1,0" fill="rgba(255, 255, 255, 0.45)" />
-            <polygon points="0,11 0,0 6.1,0" fill="rgba(3, 14, 32, 0.5)" />
-            <polygon points="0,-11 1.7,-6.2 0,-3.1 -1.7,-6.2" fill="rgba(255, 255, 255, 0.9)" />
-          </g>
-        </svg>
+      <defs>
+        <linearGradient id="swGold" x1="0" y1="0" x2="0.4" y2="1">
+          <stop offset="0" stop-color="#fff4d9" /><stop offset="0.45" stop-color="#e6c284" /><stop offset="1" stop-color="#a5742a" />
+        </linearGradient>
+        <linearGradient id="swBlue" x1="0" y1="0" x2="0.9" y2="1">
+          <stop offset="0" stop-color="#eaf7ff" /><stop offset="0.3" stop-color="#9fd4f4" /><stop offset="0.65" stop-color="#3f86c8" /><stop offset="1" stop-color="#102c50" />
+        </linearGradient>
+        <radialGradient id="swGlow">
+          <stop offset="0" stop-color="rgba(120,190,255,0.3)" /><stop offset="0.6" stop-color="rgba(120,190,255,0.08)" /><stop offset="1" stop-color="rgba(120,190,255,0)" />
+        </radialGradient>
+      </defs>
+      <ellipse cx="46" cy="60" rx="46" ry="26" fill="url(#swGlow)" />
+      <path d="M0.8 60 H6" stroke="url(#swGold)" stroke-width="1.6" />
+      <polygon points="2,57 5,60 2,63 -1,60" fill="url(#swGold)" />
+      <polygon points="4,60 38,39 87,60 38,81" fill="rgba(20,7,12,0.55)" stroke="url(#swGold)" stroke-width="1.7" />
+      <polygon points="12,60 38,45 79,60 38,75" fill="none" stroke="rgba(240,214,160,0.32)" stroke-width="0.8" />
+      <g>
+        <polygon points="12,60 38,45 79,60 38,75" fill="url(#swBlue)" />
+        <polygon points="12,60 38,45 38,60" fill="rgba(255,255,255,0.4)" />
+        <polygon points="38,45 79,60 38,60" fill="rgba(255,255,255,0.13)" />
+        <polygon points="12,60 38,60 38,75" fill="rgba(10,32,60,0.34)" />
+        <polygon points="79,60 38,60 38,75" fill="rgba(6,20,40,0.52)" />
+        <path d="M14 60 H77 M38 47 V73" stroke="rgba(255,255,255,0.34)" stroke-width="0.7" />
+        <polygon points="26,55 33,52 38,56 31,60" fill="rgba(255,255,255,0.78)" />
+      </g>
+    </svg>
 
         <!-- 右段空位：由大到小的蓝宝石饰带 -->
         <svg class="bookmark__gems" viewBox="0 0 200 80" focusable="false">
