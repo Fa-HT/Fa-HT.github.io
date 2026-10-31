@@ -1,4 +1,4 @@
-:root {
+﻿:root {
   --bg: #05070d;
 
   /* ============================================================
@@ -10,11 +10,11 @@
               自动位置基础上再偏移。
      ============================================================ */
   --avatar-size: clamp(96px, 13vw, 150px);
-  --avatar-pos: 0px 0px;
+  --avatar-pos: 90px 0px;
   --crest-size: clamp(26px, 3vw, 34px);
-  --crest-pos: 0px 0px;
+  --crest-pos: -272px 0px;
   --name-size: clamp(22px, 3.4vw, 34px);
-  --name-pos: 0px 0px;
+  --name-pos: -160px 0px;
 
   --ring: 6px;
   /* 两条竖线的位置：左边线 --band-left，右边线 --band-right */
